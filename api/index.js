@@ -16,6 +16,13 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' https://vercel.live; style-src 'self'; connect-src 'self' https://vercel.live; img-src 'self';"
+  );
+  next();
+});
 
 // GET templates
 app.get('/templates', async (req, res) => {
