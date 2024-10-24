@@ -129,7 +129,5 @@ app.delete('/templates/:id', async (req, res) => {
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
-
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
-});
+// Export the app as a module
+module.exports = app;
