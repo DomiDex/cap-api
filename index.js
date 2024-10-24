@@ -10,9 +10,8 @@ app.use(express.json());
 app.use(cors());
 const pool = new Pool({
   connectionString: DATABASE_URL,
-  ssl: {
-    require: true,
-  },
+
+  ssl: { rejectUnauthorized: false },
 });
 
 async function getPostgresVersion() {
@@ -129,5 +128,7 @@ app.delete('/templates/:id', async (req, res) => {
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
-// Export the app as a module
-module.exports = app;
+
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
+});
