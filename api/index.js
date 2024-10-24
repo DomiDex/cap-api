@@ -1,41 +1,34 @@
-let express = require('express');
-let path = require('path');
-let app = express();
+const express = require('express');
 const { Pool } = require('pg');
-require('dotenv').config();
 const cors = require('cors');
+require('dotenv').config();
 
+const app = express();
+
+// Database connection
 const { DATABASE_URL } = process.env;
-app.use(express.json());
-app.use(cors());
 const pool = new Pool({
   connectionString: DATABASE_URL,
-
-  ssl: { rejectUnauthorized: false },
+  ssl: {
+    rejectUnauthorized: false, // This may be required for cloud DBs
+  },
 });
 
-async function getPostgresVersion() {
-  const client = await pool.connect();
-  try {
-    const response = await client.query('SELECT version()');
-    console.log(response.rows[0]);
-  } finally {
-    client.release();
-  }
-}
+app.use(express.json());
+app.use(cors());
 
-// GET
+// GET templates
 app.get('/templates', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM templates');
-    res.json(result);
+    res.json(result.rows); // Fixed the result formatting
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching templates:', err);
     res.status(500).send('Error fetching templates');
   }
 });
 
-// POST
+// POST templates
 app.post('/templates', async (req, res) => {
   const {
     name,
@@ -49,7 +42,7 @@ app.post('/templates', async (req, res) => {
   } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO templates (name, category, price, template_link, short_description, long_description,image_main,image_thumbnail ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      'INSERT INTO templates (name, category, price, template_link, short_description, long_description, image_main, image_thumbnail) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
       [
         name,
         category,
@@ -63,12 +56,12 @@ app.post('/templates', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('Error creating template:', err);
     res.status(500).send('Error creating template');
   }
 });
 
-// PUT
+// PUT templates
 app.put('/templates/:id', async (req, res) => {
   const templateId = req.params.id;
   const {
@@ -83,7 +76,7 @@ app.put('/templates/:id', async (req, res) => {
   } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE templates SET name = $1, category = $2, price = $3, template_link = $4, short_description = $5, long_description = $6,image_main=$7,image_thumbnail=$8 WHERE id = $9 RETURNING *',
+      'UPDATE templates SET name = $1, category = $2, price = $3, template_link = $4, short_description = $5, long_description = $6, image_main = $7, image_thumbnail = $8 WHERE id = $9 RETURNING *',
       [
         name,
         category,
@@ -101,12 +94,12 @@ app.put('/templates/:id', async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
+    console.error('Error updating template:', err);
     res.status(500).send('Error updating template');
   }
 });
 
-// DELETE
+// DELETE templates
 app.delete('/templates/:id', async (req, res) => {
   const templateId = req.params.id;
   try {
@@ -119,16 +112,10 @@ app.delete('/templates/:id', async (req, res) => {
     }
     res.json({ message: 'Template deleted successfully' });
   } catch (err) {
-    console.error(err);
+    console.error('Error deleting template:', err);
     res.status(500).send('Error deleting template');
   }
 });
 
-// 404
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '404.html'));
-});
-
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
-});
+// Export the app as a Vercel handler
+module.exports = app;
