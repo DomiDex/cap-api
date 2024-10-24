@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Templates API Documentation</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+      code {
+        background-color: #f5f5f5;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Templates API Documentation</h1>
+
+    <p>
+      This document provides information about the Templates API, which allows
+      you to manage templates in a database.
+    </p>
+
+    <h2>Endpoints</h2>
+
+    <h3>1. Create a Template</h3>
+
+    <p><strong>Method:</strong> POST</p>
+    <p><strong>Endpoint:</strong> <code>/templates</code></p>
+    <p><strong>Request Body:</strong></p>
+    <pre>
+<code>
+{
+  "name": "Template Name",
+  "category": "Template Category",
+  "price": 99.99,
+  "template_link": "https://www.example.com/template",
+  "short_description": "Short description of the template",
+  "long_description": "Detailed description of the template"
+}
+</code>
+</pre>
+
+    <h3>2. Get All Templates</h3>
+
+    <p><strong>Method:</strong> GET</p>
+    <p><strong>Endpoint:</strong> <code>/templates</code></p>
+
+    <h3>3. Get a Template by ID</h3>
+
+    <p><strong>Method:</strong> GET</p>
+    <p><strong>Endpoint:</strong> <code>/templates/{id}</code></p>
+    <p><strong>Example:</strong> <code>/templates/123</code></p>
+
+    <h3>4. Update a Template</h3>
+
+    <p><strong>Method:</strong> PUT</p>
+    <p><strong>Endpoint:</strong> <code>/templates/{id}</code></p>
+    <p><strong>Request Body:</strong></p>
+    <pre>
+<code>
+{
+  "name": "Updated Template Name", 
+  "category": "Updated Template Category",
+  "price": 129.99,
+  "template_link": "https://www.example.com/updated-template",
+  "short_description": "Updated short description",
+  "long_description": "Updated detailed description"
+}
+</code>
+</pre>
+
+    <h3>5. Delete a Template</h3>
+
+    <p><strong>Method:</strong> DELETE</p>
+    <p><strong>Endpoint:</strong> <code>/templates/{id}</code></p>
+    <p><strong>Example:</strong> <code>/templates/123</code></p>
+
+    <h2>Data Model</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Data Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>id</td>
+          <td>SERIAL</td>
+          <td>Unique identifier for the template (auto-incrementing)</td>
+        </tr>
+        <tr>
+          <td>name</td>
+          <td>VARCHAR(255)</td>
+          <td>Name of the template</td>
+        </tr>
+        <tr>
+          <td>category</td>
+          <td>VARCHAR(255)</td>
+          <td>Category the template belongs to</td>
+        </tr>
+        <tr>
+          <td>price</td>
+          <td>NUMERIC(10, 2)</td>
+          <td>Price of the template</td>
+        </tr>
+        <tr>
+          <td>template_link</td>
+          <td>TEXT</td>
+          <td>URL link to the template</td>
+        </tr>
+        <tr>
+          <td>short_description</td>
+          <td>TEXT</td>
+          <td>Brief description of the template</td>
+        </tr>
+        <tr>
+          <td>long_description</td>
+          <td>TEXT</td>
+          <td>Detailed description of the template</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Error Handling</h2>
+
+    <p>
+      The API will return standard HTTP status codes to indicate success or
+      failure of a request. Common codes include:
+    </p>
+
+    <ul>
+      <li><code>200 OK</code>: Successful request.</li>
+      <li><code>201 Created</code>: New resource created successfully.</li>
+      <li>
+        <code>400 Bad Request</code>: The request was malformed or missing
+        required data.
+      </li>
+      <li><code>404 Not Found</code>: The requested resource was not found.</li>
+      <li>
+        <code>500 Internal Server Error</code>: An unexpected error occurred on
+        the server.
+      </li>
+    </ul>
+  </body>
+</html>
